@@ -23,14 +23,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import GroupIcon from '@mui/icons-material/Group';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+
 import { Link, useLocation } from 'react-router-dom';
 
 export default function DashboardLayout({ children }) {
-  const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [usersOpen, setUsersOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);

@@ -33,7 +33,7 @@ export default function UserProvider({ children }) {
     };
 
     fetchUser();
-  }, []);
+  });
 
   if (loading) return <Loading />;
 

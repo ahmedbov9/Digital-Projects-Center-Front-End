@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { BASEURL } from './Api';
 import Cookie from 'cookie-universal';
-import handleApiError from './handleApiError';
 
 const cookies = Cookie();
 

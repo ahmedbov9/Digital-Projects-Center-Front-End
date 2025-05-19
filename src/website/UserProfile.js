@@ -3,18 +3,16 @@ import Cookie from 'cookie-universal';
 import { Link } from 'react-router-dom';
 import { getDateDistance } from '../helper/DateDistancs';
 import {
-  closeAlert,
   confirmAlert,
   confirmWhenWrite,
   errorAlert,
-  loadingAlert,
 } from './components/Alertservice';
 import Footer from './components/Footer';
 import { Button } from 'react-bootstrap';
 import { API } from '../Api/Api';
 import { Axios } from '../Api/axios';
 import { UserContext } from '../context/UserContext';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 
 export default function UserProfile() {
   const cookie = Cookie();

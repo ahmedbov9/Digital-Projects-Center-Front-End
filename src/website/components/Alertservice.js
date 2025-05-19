@@ -1,4 +1,3 @@
-import { da } from 'date-fns/locale';
 import Swal from 'sweetalert2';
 
 export const confirmAlert = async ({
