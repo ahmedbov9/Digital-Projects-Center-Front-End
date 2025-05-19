@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Cookie from 'cookie-universal';
 import { Axios } from '../../Api/axios';
 import { API } from '../../Api/Api';
@@ -7,7 +7,7 @@ import Loading from '../components/Loading';
 
 export default function RequireAuth({ isAdmin = false }) {
   const location = useLocation();
-  const cookies = Cookie();
+  const cookies = useMemo(() => Cookie(), []);
   const token = cookies.get('token');
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +30,7 @@ export default function RequireAuth({ isAdmin = false }) {
     };
 
     fetchUser();
-  }, [token, cookies]);
+  }, []);
 
   if (loading) return <Loading />;
 

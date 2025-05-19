@@ -58,9 +58,9 @@ const VerifyOTP = () => {
     let value = e.target.value.replace(/\D/g, ''); // السماح فقط بالأرقام
     e.target.value = value;
 
-    if (value.length === 1 && index > 0) {
-      const prevInput = inputsRef.current[index - 1];
-      if (prevInput) prevInput.focus();
+    if (value.length === 1 && index < inputsRef.current.length - 1) {
+      const nextInput = inputsRef.current[index + 1];
+      if (nextInput) nextInput.focus();
     }
   };
 
@@ -87,16 +87,19 @@ const VerifyOTP = () => {
     } else if (!verifyType) {
       errorAlert('غير مسموح لك بالدخول الى هذه الصفحة');
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (cookie.get('token')) {
       errorAlert('لقد قمت بتسجيل الدخول بالفعل');
+      if (refresher === 200) {
+        successAlert('تم التحقق من حسابك بنجاح');
+      }
       setTimeout(() => {
         window.location.pathname = '/';
       }, 1500);
     }
-  }, [refresher, cookie]);
+  }, [refresher]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,7 +117,7 @@ const VerifyOTP = () => {
         if (response.status === 201) {
           cookie.set('token', response.data.token);
           successAlert(response.data.message);
-          setRefresher((prev) => prev + 1);
+          setRefresher(200);
         } else {
           errorAlert(response.data.message);
         }
@@ -143,7 +146,7 @@ const VerifyOTP = () => {
                   key={index}
                   type="text"
                   className="text-center mx-1"
-                  style={{ width: '40px', direction: 'ltr' }}
+                  style={{ width: '40px' }}
                   maxLength="1"
                   required
                   inputMode="numeric"
