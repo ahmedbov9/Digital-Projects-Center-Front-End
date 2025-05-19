@@ -17,9 +17,8 @@ import DashboardLayout from './components/DashboardLayout';
 import { API } from '../Api/Api';
 import { Axios } from '../Api/axios';
 import { useEffect, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { FormatNumber } from '../helper/FormatNumber';
-import { waitFor } from '@testing-library/dom';
 export default function DashboardPage() {
   const [totalUsers, setTotalUsers] = useState([]);
   const [totalOrders, setTotalOrders] = useState([]);
