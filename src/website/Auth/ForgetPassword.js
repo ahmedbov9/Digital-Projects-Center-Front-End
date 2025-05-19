@@ -2,7 +2,6 @@ import { Form } from 'react-bootstrap';
 import Footer from '../components/Footer';
 import NavBar from '../components/Navbar';
 import { Button, Container } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import {
   closeAlert,

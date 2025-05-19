@@ -14,7 +14,6 @@ import {
   ListItemText,
   Divider,
   Collapse,
-  useTheme,
   styled,
 } from '@mui/material';
 

@@ -1,12 +1,11 @@
 // VerifyOTP.jsx
 
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import Cookie from 'cookie-universal';
 
-import { UserContext } from '../../context/UserContext';
 import { API } from '../../Api/Api';
 import {
   closeAlert,
@@ -19,10 +18,10 @@ const VerifyOTP = () => {
   const location = useLocation();
   const { email, verifyType } = location.state || {};
 
-  const { currentUser } = useContext(UserContext); // السياق يجب أن يكون AuthContext وليس UserContext
   const inputsRef = useRef([]);
   const [refresher, setRefresher] = useState(0);
-  const [waiting, setWaiting] = useState(0);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const cookie = new Cookie();
   const resendBtnRef = useRef();
   // استخراج كود OTP من الحقول
@@ -36,7 +35,6 @@ const VerifyOTP = () => {
     const ref = resendBtnRef.current;
     const waitSec = 60;
     setCounter(waitSec);
-    setWaiting(waitSec * 1000);
     if (ref) {
       ref.disabled = true;
     }
@@ -89,7 +87,7 @@ const VerifyOTP = () => {
     } else if (!verifyType) {
       errorAlert('غير مسموح لك بالدخول الى هذه الصفحة');
     }
-  }, []);
+  });
 
   useEffect(() => {
     if (cookie.get('token')) {
@@ -98,7 +96,7 @@ const VerifyOTP = () => {
         window.location.pathname = '/';
       }, 1500);
     }
-  }, [refresher]);
+  }, [refresher, cookie]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

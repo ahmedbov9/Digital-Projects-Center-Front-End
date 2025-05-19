@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API } from '../../Api/Api';
 import { useEffect, useState } from 'react';
-import Loading from '../components/Loading';
+
 import Footer from '../components/Footer';
 import Cookie from 'cookie-universal';
 import {
@@ -18,7 +18,7 @@ import {
 export default function Register() {
   const [response, setResponse] = useState(null);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+
   const cookies = Cookie();
   const [form, setForm] = useState({
     firstName: '',
@@ -47,7 +47,6 @@ export default function Register() {
   async function submitHandler(e) {
     e.preventDefault();
     loadingAlert('جاري تسجيل الحساب...');
-    setLoading(true);
     try {
       const response = await axios.post(`${API.registerStepOne}`, form);
       if (response.status === 200) {

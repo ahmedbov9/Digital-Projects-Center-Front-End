@@ -30,7 +30,7 @@ export default function RequireAuth({ isAdmin = false }) {
     };
 
     fetchUser();
-  }, []);
+  }, [token, cookies]);
 
   if (loading) return <Loading />;
 

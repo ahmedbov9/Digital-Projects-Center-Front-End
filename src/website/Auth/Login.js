@@ -19,7 +19,6 @@ export default function Login() {
     email: '',
     password: '',
   });
-  const [response, setResponse] = useState(null);
   const cookies = Cookie();
 
   useEffect(() => {
