@@ -100,31 +100,29 @@ const VerifyOTP = () => {
       }, 1500);
     }
   }, [refresher]);
-  //
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otp = getOTP();
 
-    if (verifyType === 'register') {
-      loadingAlert('جاري التحقق من رمز التحقق...');
-      try {
-        const response = await axios.post(API.verifyOtpAndRegister, {
-          email,
-          otp,
-        });
+    loadingAlert('جاري التحقق من رمز التحقق...');
+    try {
+      const response = await axios.post(API.verifyOtpAndRegister, {
+        email,
+        otp,
+      });
 
-        closeAlert();
-        if (response.status === 201) {
-          cookie.set('token', response.data.token);
-          successAlert(response.data.message);
-          setRefresher(200);
-        } else {
-          errorAlert(response.data.message);
-        }
-      } catch (error) {
-        closeAlert();
-        errorAlert(error?.response?.data?.message || 'فشل التحقق');
+      closeAlert();
+      if (response.status === 201) {
+        cookie.set('token', response.data.token);
+        successAlert(response.data.message);
+        setRefresher(200);
+      } else {
+        errorAlert(response.data.message);
       }
+    } catch (error) {
+      closeAlert();
+      errorAlert(error?.response?.data?.message || 'فشل التحقق');
     }
   };
 
