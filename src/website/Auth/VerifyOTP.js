@@ -100,7 +100,7 @@ const VerifyOTP = () => {
       }, 1500);
     }
   }, [refresher]);
-
+  //
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otp = getOTP();
