@@ -93,6 +93,7 @@ export default function CustomTablePagination({
           alignItems: 'center',
           gap: 2,
           mb: 2,
+          flexWrap: 'wrap',
         }}
       >
         <Typography variant="h6" fontWeight="bold">
@@ -104,86 +105,97 @@ export default function CustomTablePagination({
           placeholder="بحث..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          sx={{ width: 280, backgroundColor: '#f5f5f5', borderRadius: 1 }}
+          sx={{
+            width: { xs: '100%', sm: 280 },
+            backgroundColor: '#f5f5f5',
+            borderRadius: 1,
+          }}
         />
       </Box>
 
-      <TableContainer sx={{ maxHeight: 520 }}>
-        <Table stickyHeader aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              {columns.map(({ id, label, minWidth, align }) => (
-                <TableCell
-                  key={id}
-                  align={align || 'left'}
-                  sx={{
-                    minWidth,
-                    backgroundColor: '#1976d2',
-                    color: '#fff',
-                    fontWeight: 'bold',
-                    fontSize: 15,
-                    fontFamily: 'Almarai',
-                    textAlign: 'center',
-                    borderBottom: '2px solid #1565c0',
-                  }}
-                >
-                  {label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {rows.length > 0 ? (
-              rows.map((row, index) => (
-                <TableRow
-                  hover
-                  tabIndex={-1}
-                  key={row[rowKey] || index}
-                  sx={{ borderBottom: '1px solid #ddd' }}
-                >
-                  {columns.map(({ id, align, minWidth }) => (
-                    <TableCell
-                      key={id}
-                      align={align || 'left'}
-                      sx={{
-                        py: 1.5,
-                        fontSize: 16,
-                        color: '#333',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis',
-                        overflow: 'hidden',
-                        maxWidth: minWidth,
-                        textAlign: 'center',
-                        fontFamily: 'Almarai',
-                      }}
-                      title={renderCellValue(
-                        columns.find((c) => c.id === id),
-                        row
-                      )}
-                    >
-                      {renderCellValue(
-                        columns.find((c) => c.id === id),
-                        row
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
+      <Box sx={{ width: '100%', overflowX: 'auto' }}>
+        <TableContainer sx={{ maxHeight: 520, minWidth: 350 }}>
+          <Table
+            stickyHeader
+            aria-label="custom pagination table"
+            sx={{ minWidth: 350 }}
+          >
+            <TableHead>
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  align="center"
-                  sx={{ py: 3, fontSize: 16 }}
-                >
-                  لا توجد بيانات للعرض
-                </TableCell>
+                {columns.map(({ id, label, minWidth, align }) => (
+                  <TableCell
+                    key={id}
+                    align={align || 'left'}
+                    sx={{
+                      minWidth,
+                      backgroundColor: '#1976d2',
+                      color: '#fff',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      fontFamily: 'Almarai',
+                      textAlign: 'center',
+                      borderBottom: '2px solid #1565c0',
+                      px: { xs: 1, sm: 2 },
+                    }}
+                  >
+                    {label}
+                  </TableCell>
+                ))}
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+
+            <TableBody>
+              {rows.length > 0 ? (
+                rows.map((row, index) => (
+                  <TableRow
+                    hover
+                    tabIndex={-1}
+                    key={row[rowKey] || index}
+                    sx={{ borderBottom: '1px solid #ddd' }}
+                  >
+                    {columns.map(({ id, align }) => (
+                      <TableCell
+                        key={id}
+                        align={align || 'left'}
+                        sx={{
+                          py: 1.5,
+                          fontSize: { xs: 13, sm: 16 },
+                          color: '#333',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+                          textAlign: 'center',
+                          fontFamily: 'Almarai',
+                          px: { xs: 1, sm: 2 },
+                        }}
+                        title={renderCellValue(
+                          columns.find((c) => c.id === id),
+                          row
+                        )}
+                      >
+                        {renderCellValue(
+                          columns.find((c) => c.id === id),
+                          row
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    align="center"
+                    sx={{ py: 3, fontSize: 16 }}
+                  >
+                    لا توجد بيانات للعرض
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       <Box
         sx={{

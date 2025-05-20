@@ -1,8 +1,6 @@
 import { Form, Button, Container, Card } from 'react-bootstrap';
-import Footer from '../components/Footer';
-import NavBar from '../components/Navbar';
-import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { Axios } from '../../Api/axios';
 import { API } from '../../Api/Api';
 import {
@@ -10,17 +8,45 @@ import {
   errorAlert,
   loadingAlert,
   successAlert,
-} from '../components/Alertservice';
-import { UserContext } from '../../context/UserContext';
-export default function UpdateUser() {
-  const { currentUser } = useContext(UserContext);
-
+} from '../../website/components/Alertservice';
+import DashboardLayout from './DashboardLayout';
+export default function UpdateUserFromAdmin() {
+  const { id } = useParams();
+  const [currentUser, setCurrentUser] = useState(null);
   const [form, setForm] = useState({
-    firstName: currentUser?.firstName || '',
-    lastName: currentUser?.lastName || '',
-    mobileNumber: currentUser?.mobileNumber || '',
-    email: currentUser?.email || '',
+    firstName: '',
+    lastName: '',
+    mobileNumber: '',
+    isAdmin: false,
   });
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const response = await Axios.get(`${API.getUserById}/${id}`);
+        if (response.status === 200) {
+          setCurrentUser(response.data);
+        } else {
+          errorAlert(response.data.message);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      setForm({
+        firstName: currentUser.firstName || '',
+        lastName: currentUser.lastName || '',
+        mobileNumber: currentUser.mobileNumber || '',
+        email: currentUser.email || '',
+        isAdmin: currentUser.isAdmin || false,
+      });
+    }
+  }, [currentUser]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({
@@ -31,16 +57,18 @@ export default function UpdateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     loadingAlert('جاري تحديث البيانات...');
+
     try {
       const response = await Axios.put(
-        `${API.updateUser}/${currentUser._id}`,
+        `${API.updateUserFromAdmin}/${id}`,
         form
       );
+
       if (response.status === 201) {
         closeAlert();
         successAlert(response.data.message);
         setTimeout(() => {
-          window.location.pathname = '/user-profile';
+          window.location.pathname = '/dashboard/users';
         }, 1500);
       } else {
         closeAlert();
@@ -52,8 +80,7 @@ export default function UpdateUser() {
     }
   };
   return (
-    <div style={{ backgroundColor: '#e0e3e5' }}>
-      <NavBar margin={'100px'} />
+    <div style={{ backgroundColor: '#e0e3e5', marginTop: '100px' }}>
       <Container className=" min-vh-100">
         <Card className="shadow-lg col-lg-8 col-md-10 col-sm-12 mx-auto mt-5">
           <Card.Header className="bg-primary text-white text-center">
@@ -85,7 +112,7 @@ export default function UpdateUser() {
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="password">
+              <Form.Group className="mb-3" controlId="email">
                 <Form.Label>البريد الإلكتروني</Form.Label>
                 <Form.Control
                   type="email"
@@ -97,7 +124,7 @@ export default function UpdateUser() {
                   readOnly
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="password">
+              <Form.Group className="mb-3" controlId="phoneNumber">
                 <Form.Label>رقم الهاتف</Form.Label>
                 <Form.Control
                   type="text"
@@ -107,16 +134,18 @@ export default function UpdateUser() {
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="password">
-                <Form.Label>كلمة المرور الحاليه</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="ادخل كلمة المرور الحاليه"
-                  value={form.password}
-                  name="password"
+              <Form.Group className="mb-3" controlId="isAdmin">
+                <Form.Label>صلاحيات المستخدم</Form.Label>
+                <Form.Select
+                  value={form.isAdmin}
+                  name="isAdmin"
                   onChange={handleInputChange}
-                />
+                >
+                  <option value={false}>مستخدم عادي</option>
+                  <option value={true}>مدير</option>
+                </Form.Select>
               </Form.Group>
+
               <div className="d-flex gap-3 justify-content-center">
                 <Button variant="success" type="submit">
                   تعديل
@@ -130,7 +159,7 @@ export default function UpdateUser() {
           </Card.Body>
         </Card>
       </Container>
-      <Footer />
+      <DashboardLayout />
     </div>
   );
 }

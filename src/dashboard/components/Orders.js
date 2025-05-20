@@ -27,9 +27,9 @@ export default function Orders() {
       minWidth: 120,
       render: (row) => {
         const map = {
-          design: 'تصميم',
-          programming: 'برمجة',
-          consulting: 'استشارة',
+          'web-development': 'تطوير الويب',
+          'technical-support': 'الدعم الفني',
+          'technical-consultation': 'استشارة تقنية',
         };
         return map[row.serviceType] || 'غير محدد';
       },
@@ -82,7 +82,11 @@ export default function Orders() {
       label: 'الإجراء',
       minWidth: 100,
       render: (row) => (
-        <Link className="btn btn-primary" to={`${row._id}`}>
+        <Link
+          style={{ fontSize: '12px' }}
+          className="btn btn-primary"
+          to={`${row._id}`}
+        >
           عرض التفاصيل
         </Link>
       ),

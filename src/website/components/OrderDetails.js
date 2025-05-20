@@ -226,91 +226,87 @@ export default function OrderDetails() {
               </div>
             )}
             {order.servicePaymentStatus === 'unpaid' &&
-              order.serviceStatus ===
-                'in-progress'(
-                  <div style={{ width: 'fit-content' }}>
+              order.serviceStatus === 'in-progress' && (
+                <div style={{ width: 'fit-content' }}>
+                  <p className="text-muted fw-bold mt-3">
+                    حالة الدفع:
+                    <div className="bg-danger text-white p-2 rounded mt-1">
+                      لم يتم الدفع بعد
+                    </div>
+                  </p>
+                  <div className="w-100">
                     <p className="text-muted fw-bold mt-3">
-                      حالة الدفع:
-                      <div className="bg-danger text-white p-2 rounded mt-1">
-                        لم يتم الدفع بعد
-                      </div>
+                      يرجى دفع المبلغ المستحق :
                     </p>
-                    <div className="w-100">
-                      <p className="text-muted fw-bold mt-3">
-                        يرجى دفع المبلغ المستحق :
+                    <div className=" p-2 rounded mt-1">
+                      <span className="d-inline-flex align-items-center gap-1">
+                        <span>{order.priceOffer.price}</span>
+                        <img
+                          src={saudiRiyalLogo}
+                          width="17"
+                          height="17"
+                          alt="ريال"
+                        />
+                      </span>
+                    </div>
+                    <div
+                      style={{ border: '2px solid #ccc' }}
+                      className="p-2 rounded mt-1"
+                    >
+                      <p className="text-muted text-center fw-blod mt-3">
+                        تفاصيل الحساب البنكي :
+                        <div className=" p-2 rounded mt-1">
+                          <span className="fw-bold">الآيبان :</span>{' '}
+                          {process.env.REACT_APP_BANK_IBAN}
+                        </div>
+                        <div className=" p-2 rounded mt-1">
+                          <span className="fw-bold">رقم الحساب :</span>{' '}
+                          {process.env.REACT_APP_ACCOUNT_NUMBER}
+                        </div>
+                        <div className=" p-2 rounded mt-1">
+                          <span className="fw-bold">اسم صاحب الحساب :</span>{' '}
+                          {process.env.REACT_APP_ACCOUNT_NAME}
+                        </div>
+                        <div className=" p-2 rounded mt-1">
+                          <span className="fw-bold">نوع البنك :</span>{' '}
+                          {process.env.REACT_APP_ACCOUNT_TYPE}
+                        </div>
                       </p>
-                      <div className=" p-2 rounded mt-1">
-                        <span className="d-inline-flex align-items-center gap-1">
-                          <span>{order.priceOffer.price}</span>
-                          <img
-                            src={saudiRiyalLogo}
-                            width="17"
-                            height="17"
-                            alt="ريال"
-                          />
-                        </span>
-                      </div>
-                      <div
-                        style={{ border: '2px solid #ccc' }}
-                        className="p-2 rounded mt-1"
-                      >
-                        <p className="text-muted text-center fw-blod mt-3">
-                          تفاصيل الحساب البنكي :
-                          <div className=" p-2 rounded mt-1">
-                            <span className="fw-bold">الآيبان :</span>{' '}
-                            {process.env.REACT_APP_BANK_IBAN}
-                          </div>
-                          <div className=" p-2 rounded mt-1">
-                            <span className="fw-bold">رقم الحساب :</span>{' '}
-                            {process.env.REACT_APP_ACCOUNT_NUMBER}
-                          </div>
-                          <div className=" p-2 rounded mt-1">
-                            <span className="fw-bold">اسم صاحب الحساب :</span>{' '}
-                            {process.env.REACT_APP_ACCOUNT_NAME}
-                          </div>
-                          <div className=" p-2 rounded mt-1">
-                            <span className="fw-bold">نوع البنك :</span>{' '}
-                            {process.env.REACT_APP_ACCOUNT_TYPE}
-                          </div>
-                        </p>
-                      </div>
+                    </div>
+                    <p className="text-muted fw-bold mt-3">
+                      بعد الدفع الرجاء ارسال صورة من ايصال الدفع على الواتس اب
+                      او الايميل الخاص بنا وسيتم تحديث حالة الدفع من قبلنا
+                    </p>
+                    <div className="d-flex justify-content-center gap-3">
                       <p className="text-muted fw-bold mt-3">
-                        بعد الدفع الرجاء ارسال صورة من ايصال الدفع على الواتس اب
-                        او الايميل الخاص بنا وسيتم تحديث حالة الدفع من قبلنا
-                      </p>
-                      <div className="d-flex justify-content-center gap-3">
-                        <p className="text-muted fw-bold mt-3">
-                          <span className="fw-bold">
-                            <a
-                              href="https://wa.me/+966565125040"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ margin: '0 10px', color: 'green' }}
-                            >
-                              <FontAwesomeIcon
-                                icon={faWhatsapp}
-                                fontSize={'30'}
-                              />
-                            </a>
-                          </span>{' '}
-                        </p>
-                        <p className="text-muted fw-bold mt-3">
+                        <span className="fw-bold">
                           <a
-                            href="mailto:companybov9@gmail.com"
+                            href="https://wa.me/+966565125040"
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ margin: '0 10px', color: '#dca604' }}
+                            style={{ margin: '0 10px', color: 'green' }}
                           >
                             <FontAwesomeIcon
-                              icon={faMailBulk}
+                              icon={faWhatsapp}
                               fontSize={'30'}
                             />
                           </a>
-                        </p>
-                      </div>
+                        </span>{' '}
+                      </p>
+                      <p className="text-muted fw-bold mt-3">
+                        <a
+                          href="mailto:companybov9@gmail.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ margin: '0 10px', color: '#dca604' }}
+                        >
+                          <FontAwesomeIcon icon={faMailBulk} fontSize={'30'} />
+                        </a>
+                      </p>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
           </div>
         </div>
       </div>

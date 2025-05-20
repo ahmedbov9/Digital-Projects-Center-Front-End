@@ -20,6 +20,7 @@ import Order from './dashboard/components/Order';
 import Users from './dashboard/components/Users';
 import UnverifiedUsers from './dashboard/components/UnverifiedUsers';
 import NotFound from './website/404';
+import UpdateUserFromAdmin from './dashboard/components/UpdateUserAdmin';
 function App() {
   return (
     <div className="App">
@@ -47,6 +48,10 @@ function App() {
           <Route path="dashboard/orders" element={<Orders />} />
           <Route path="dashboard/orders/:id" element={<Order />} />
           <Route path="dashboard/users" element={<Users />} />
+          <Route
+            path="dashboard/update-user/:id"
+            element={<UpdateUserFromAdmin />}
+          />
           <Route
             path="dashboard/unverified-users"
             element={<UnverifiedUsers />}

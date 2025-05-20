@@ -31,6 +31,7 @@ export default function NavBar(props) {
               <li className="navbar_item">
                 <Link to="/user-profile">الملف الشخصي</Link>
               </li>
+              {}
             </>
           )}
         </ul>

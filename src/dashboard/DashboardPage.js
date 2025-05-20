@@ -184,7 +184,13 @@ export default function DashboardPage() {
           لوحة التحكم الرئيسية
         </Typography>
 
-        <Grid container spacing={3} justifyContent="center" mb={6}>
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          className={'col-lg-8 col-md-12 col-sm-6 mx-auto'}
+          mb={6}
+        >
           {mainStats.map(renderCard)}
         </Grid>
 

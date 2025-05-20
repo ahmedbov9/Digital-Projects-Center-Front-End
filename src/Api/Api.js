@@ -24,7 +24,9 @@ export const API = {
   rejectOffer: `${BASEURL}/order/reject-price-offer`, // from user
   updatePaymentStatusToPaid: `${BASEURL}/order/update-payment-status`, // from user
   updateOrderStatusToCompleted: `${BASEURL}/order/update-order-status`, // from admin
+  updateUserFromAdmin: `${BASEURL}/user/update-user-dashboard`,
   getAllUsers: `${BASEURL}/user/get-all-users`,
+  getUserById: `${BASEURL}/user/get-user`,
   getAllUnverifiedUsers: `${BASEURL}/user/get-all-unverified-users`,
   dashboardStats: `${BASEURL}/dashboard/dashboard-stats`,
 };
