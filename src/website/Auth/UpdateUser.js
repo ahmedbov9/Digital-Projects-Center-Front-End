@@ -40,7 +40,7 @@ export default function UpdateUser() {
         closeAlert();
         successAlert(response.data.message);
         setTimeout(() => {
-          window.location.pathname = '/user-profile';
+          window.history.back();
         }, 1500);
       } else {
         closeAlert();

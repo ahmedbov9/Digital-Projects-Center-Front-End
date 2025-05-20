@@ -1,11 +1,8 @@
-// VerifyOTP.jsx
-
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Card, Row, Col, Container } from 'react-bootstrap';
 import axios from 'axios';
 import Cookie from 'cookie-universal';
-
 import { API } from '../../Api/Api';
 import {
   closeAlert,
@@ -19,49 +16,51 @@ const VerifyOTP = () => {
   const { email, verifyType } = location.state || {};
 
   const inputsRef = useRef([]);
-  const [refresher, setRefresher] = useState(0);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const cookie = new Cookie();
   const resendBtnRef = useRef();
-  // استخراج كود OTP من الحقول
-  const getOTP = () => {
-    return inputsRef.current.map((input) => input?.value || '').join('');
-  };
-  // ...existing code...
   const [counter, setCounter] = useState(0);
+  const [refresher, setRefresher] = useState(0);
+  const cookie = new Cookie();
 
-  function disableButtonAfterSendOTP() {
+  useEffect(() => {
+    if (inputsRef.current[0]) {
+      inputsRef.current[0].focus();
+    }
+  }, []);
+
+  const getOTP = () =>
+    inputsRef.current.map((input) => input?.value || '').join('');
+
+  const handleInputChange = (e, index) => {
+    const value = e.target.value.replace(/\D/g, '');
+    e.target.value = value;
+    if (value.length === 1 && index < inputsRef.current.length - 1) {
+      const nextInput = inputsRef.current[index + 1];
+      if (nextInput) nextInput.focus();
+    }
+
+    if (value === '' && e.nativeEvent.inputType === 'deleteContentBackward') {
+      if (index > 0) {
+        inputsRef.current[index - 1]?.focus();
+      }
+    }
+  };
+
+  const disableButtonAfterSendOTP = () => {
     const ref = resendBtnRef.current;
     const waitSec = 60;
     setCounter(waitSec);
-    if (ref) {
-      ref.disabled = true;
-    }
+    if (ref) ref.disabled = true;
 
-    let interval = setInterval(() => {
+    const interval = setInterval(() => {
       setCounter((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          if (ref) {
-            ref.disabled = false;
-          }
+          if (ref) ref.disabled = false;
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-  }
-
-  // عند تغيير محتوى أحد الخانات
-  const handleInputChange = (e, index) => {
-    let value = e.target.value.replace(/\D/g, ''); // السماح فقط بالأرقام
-    e.target.value = value;
-
-    if (value.length === 1 && index < inputsRef.current.length - 1) {
-      const nextInput = inputsRef.current[index + 1];
-      if (nextInput) nextInput.focus();
-    }
   };
 
   const resendOtp = async () => {
@@ -92,9 +91,7 @@ const VerifyOTP = () => {
   useEffect(() => {
     if (cookie.get('token')) {
       errorAlert('لقد قمت بتسجيل الدخول بالفعل');
-      if (refresher === 200) {
-        successAlert('تم التحقق من حسابك بنجاح');
-      }
+      if (refresher === 200) successAlert('تم التحقق من حسابك بنجاح');
       setTimeout(() => {
         window.location.pathname = '/';
       }, 1500);
@@ -104,14 +101,12 @@ const VerifyOTP = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otp = getOTP();
-
     loadingAlert('جاري التحقق من رمز التحقق...');
     try {
       const response = await axios.post(API.verifyOtpAndRegister, {
         email,
         otp,
       });
-
       closeAlert();
       if (response.status === 201) {
         cookie.set('token', response.data.token);
@@ -127,53 +122,64 @@ const VerifyOTP = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#e0e3e5' }}>
-      <div className="container d-flex justify-content-center align-items-center vh-100">
-        <div
-          className="card p-4 shadow"
-          style={{ maxWidth: '400px', width: '100%' }}
-        >
-          <h2 className="text-center mb-4">تفعيل الحساب</h2>
-          <p className="text-center text-muted">
-            يرجى إدخال رمز التحقق (OTP) المرسل إلى بريدك الإلكتروني.
-          </p>
-          <Form onSubmit={handleSubmit}>
-            <div className="d-flex justify-content-between mb-3">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Form.Control
-                  key={index}
-                  type="text"
-                  className="text-center mx-1"
-                  style={{ width: '40px' }}
-                  maxLength="1"
-                  required
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  ref={(el) => (inputsRef.current[index] = el)}
-                  onChange={(e) => handleInputChange(e, index)}
-                />
-              ))}
-            </div>
-            <div className="d-flex justify-content-center align-items-center flex-column gap-2">
-              <Button type="submit" className="w-100" variant="primary">
-                تحقق
-              </Button>
-              <Button
-                type="button"
-                className="w-100"
-                variant="outline-primary"
-                onClick={resendOtp}
-                ref={resendBtnRef}
-                disabled={counter > 0}
-              >
-                {counter > 0
-                  ? `إعادة إرسال رمز التحقق بعد ${counter} ثانية`
-                  : 'اعادة إرسال رمز التحقق'}
-              </Button>
-            </div>
-          </Form>
-        </div>
-      </div>
+    <div
+      style={{
+        backgroundColor: '#e0e3e5',
+        minHeight: '100vh',
+        direction: 'ltr',
+      }}
+    >
+      <Container className="d-flex justify-content-center align-items-center py-5">
+        <Card className="shadow-lg w-100" style={{ maxWidth: '480px' }}>
+          <Card.Body className="p-4">
+            <h3 className="text-center mb-3">تفعيل الحساب</h3>
+            <p className="text-center text-muted mb-4">
+              أدخل رمز التحقق المرسل إلى بريدك الإلكتروني
+            </p>
+
+            <Form onSubmit={handleSubmit}>
+              <Row className="gx-2 justify-content-center mb-4">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Col xs={2} key={index}>
+                    <Form.Control
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength="1"
+                      className="text-center fs-5 fw-bold"
+                      style={{
+                        height: '50px',
+                        borderRadius: '0.5rem',
+                      }}
+                      required
+                      ref={(el) => (inputsRef.current[index] = el)}
+                      onChange={(e) => handleInputChange(e, index)}
+                    />
+                  </Col>
+                ))}
+              </Row>
+
+              <div className="d-grid gap-2">
+                <Button type="submit" variant="primary">
+                  تحقق
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline-primary"
+                  onClick={resendOtp}
+                  ref={resendBtnRef}
+                  disabled={counter > 0}
+                >
+                  {counter > 0
+                    ? `إعادة الإرسال خلال ${counter} ثانية`
+                    : 'إعادة إرسال رمز التحقق'}
+                </Button>
+              </div>
+            </Form>
+          </Card.Body>
+        </Card>
+      </Container>
     </div>
   );
 };
