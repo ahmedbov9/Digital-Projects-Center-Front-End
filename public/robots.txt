@@ -1,3 +1,18 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /user-profile
+Disallow: /my-orders
+Disallow: /order/
+Disallow: /auth/
+Disallow: /login
+Disallow: /register
+Disallow: /forget-password
+Disallow: /reset-password
+Disallow: /verify
+Disallow: /update-user
+Disallow: /components/
+
+Allow: /
+
+Sitemap: https://digitalprojectcenter.netlify.app/sitemap.xml

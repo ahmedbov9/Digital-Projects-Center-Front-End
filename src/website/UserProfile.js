@@ -1,8 +1,6 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
 import Cookie from 'cookie-universal';
-
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
 import { API } from '../Api/Api';
@@ -15,21 +13,46 @@ import {
   errorAlert,
 } from './components/Alertservice';
 
+// MUI imports
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Stack,
+  Button as MUIButton,
+  Divider,
+} from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import EditIcon from '@mui/icons-material/Edit';
+import LogoutIcon from '@mui/icons-material/Logout';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LockResetIcon from '@mui/icons-material/LockReset';
+
 export default function UserProfile() {
   const cookie = Cookie();
   const { currentUser } = useContext(UserContext);
 
   if (!currentUser) {
     return (
-      <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+      <Box sx={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
         <NavBar />
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="80vh"
+        >
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">جاري التحميل...</span>
           </div>
-        </div>
+        </Box>
         <Footer />
-      </div>
+      </Box>
     );
   }
 
@@ -78,69 +101,168 @@ export default function UserProfile() {
   };
 
   return (
-    <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+    <Box sx={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
       <NavBar />
-      <div className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <div className="card shadow border-0 rounded-4">
-              <div className="card-body p-5">
-                <h2 className="text-center text-primary mb-4">الملف الشخصي</h2>
-                <p className="text-center text-muted mb-5">
-                  مرحبًا {currentUser.firstName}! إليك تفاصيل حسابك.
-                </p>
-
-                <div className="mb-4">
-                  <h5>
-                    <strong>الاسم:</strong> {currentUser.firstName}{' '}
-                    {currentUser.lastName}
-                  </h5>
-                  <h5>
-                    <strong>البريد الإلكتروني:</strong> {currentUser.email}
-                  </h5>
-                  <h5>
-                    <strong>رقم الجوال:</strong> {currentUser.mobileNumber}
-                  </h5>
-                  <h5>
-                    <strong>تاريخ التسجيل:</strong>{' '}
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="80vh"
+        sx={{ py: 6 }}
+      >
+        <Card
+          sx={{
+            maxWidth: 500,
+            width: '100%',
+            borderRadius: 5,
+            boxShadow: 6,
+            p: 2,
+            background: 'linear-gradient(135deg, #f8fafc 60%, #e3f2fd 100%)',
+          }}
+        >
+          <CardContent>
+            <Stack alignItems="center" spacing={2} mb={3}>
+              <Avatar
+                sx={{
+                  bgcolor: 'primary.main',
+                  width: 80,
+                  height: 80,
+                  fontSize: 40,
+                }}
+              >
+                <PersonIcon fontSize="inherit" />
+              </Avatar>
+              <Typography variant="h5" fontWeight={700} color="primary.main">
+                الملف الشخصي
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary">
+                مرحبًا {currentUser.firstName}! إليك تفاصيل حسابك.
+              </Typography>
+            </Stack>
+            <Divider sx={{ mb: 3 }} />
+            <Stack spacing={2} mb={3}>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Avatar
+                  sx={{ bgcolor: 'primary.light', width: 40, height: 40 }}
+                >
+                  <PersonIcon />
+                </Avatar>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    الاسم
+                  </Typography>
+                  <Typography variant="body1" fontWeight={500}>
+                    {currentUser.firstName} {currentUser.lastName}
+                  </Typography>
+                </Box>
+              </Stack>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Avatar sx={{ bgcolor: 'info.light', width: 40, height: 40 }}>
+                  <EmailIcon />
+                </Avatar>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    البريد الإلكتروني
+                  </Typography>
+                  <Typography variant="body1" fontWeight={500}>
+                    {currentUser.email}
+                  </Typography>
+                </Box>
+              </Stack>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Avatar
+                  sx={{ bgcolor: 'success.light', width: 40, height: 40 }}
+                >
+                  <PhoneIphoneIcon />
+                </Avatar>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    رقم الجوال
+                  </Typography>
+                  <Typography variant="body1" fontWeight={500}>
+                    {currentUser.mobileNumber}
+                  </Typography>
+                </Box>
+              </Stack>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Avatar
+                  sx={{ bgcolor: 'secondary.light', width: 40, height: 40 }}
+                >
+                  <CalendarMonthIcon />
+                </Avatar>
+                <Box>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    تاريخ التسجيل
+                  </Typography>
+                  <Typography variant="body1" fontWeight={500}>
                     {getDateDistance(currentUser.createdAt)}
-                  </h5>
-                </div>
+                  </Typography>
+                </Box>
+              </Stack>
+            </Stack>
+            <Divider sx={{ mb: 3 }} />
 
-                <div className="row mt-4 g-3">
-                  <div className="col-md-6 d-grid">
-                    <Link
-                      to={`/edit-profile/${currentUser._id}`}
-                      className="btn btn-primary"
-                    >
-                      تعديل الملف الشخصي
-                    </Link>
-                  </div>
-                  <div className="col-md-6 d-grid">
-                    <Link
-                      to="/change-password"
-                      className="btn btn-outline-secondary"
-                    >
-                      تغيير كلمة المرور
-                    </Link>
-                  </div>
-                  <div className="col-md-6 d-grid">
-                    <Button variant="danger" onClick={handleDeleteAccount}>
-                      حذف الحساب
-                    </Button>
-                  </div>
-                  <div className="col-md-6 d-grid">
-                    <Button variant="dark" onClick={handleLogout}>
-                      تسجيل الخروج
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              useFlexGap
+              flexWrap="wrap"
+              sx={{ mb: 1 }}
+            >
+              <MUIButton
+                component={Link}
+                to={`/edit-profile/${currentUser._id}`}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<EditIcon />}
+                sx={{ fontWeight: 'bold', borderRadius: 2, gap: 1 }}
+              >
+                تعديل الملف الشخصي
+              </MUIButton>
+              <MUIButton
+                component={Link}
+                to="/change-password"
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                startIcon={<LockResetIcon />}
+                sx={{ fontWeight: 'bold', borderRadius: 2, gap: 1 }}
+              >
+                تغيير كلمة المرور
+              </MUIButton>
+            </Stack>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              useFlexGap
+              flexWrap="wrap"
+            >
+              <MUIButton
+                variant="outlined"
+                color="error"
+                fullWidth
+                startIcon={<DeleteIcon />}
+                sx={{ fontWeight: 'bold', borderRadius: 2, gap: 1 }}
+                onClick={handleDeleteAccount}
+              >
+                حذف الحساب
+              </MUIButton>
+              <MUIButton
+                variant="contained"
+                color="inherit"
+                fullWidth
+                startIcon={<LogoutIcon />}
+                sx={{ fontWeight: 'bold', borderRadius: 2, gap: 1 }}
+                onClick={handleLogout}
+              >
+                تسجيل الخروج
+              </MUIButton>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
       <Footer />
-    </div>
+    </Box>
   );
 }

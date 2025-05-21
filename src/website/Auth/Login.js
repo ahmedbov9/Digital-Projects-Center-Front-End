@@ -1,47 +1,63 @@
-import { Form } from 'react-bootstrap';
-import NavBar from '../components/Navbar';
-import { Button } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API } from '../../Api/Api';
 import Cookie from 'cookie-universal';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  InputAdornment,
+  IconButton,
+  Alert,
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Footer from '../components/Footer';
+import NavBar from '../components/Navbar';
+import { API } from '../../Api/Api';
 import {
   closeAlert,
   errorAlert,
   loadingAlert,
   successAlert,
 } from '../components/Alertservice';
-import Footer from '../components/Footer';
+
 export default function Login() {
   const navigate = useNavigate();
+  const cookies = Cookie();
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
-  const cookies = Cookie();
+  const [showPassword, setShowPassword] = useState(false);
+  const [response, setResponse] = useState(null);
 
   useEffect(() => {
     const token = cookies.get('token');
-
     if (token) {
       navigate('/');
       errorAlert(
         'لا يمكنك الدخول الى صفحة تسجيل الدخول سجل خروج ثم ادخل مرة اخرى'
       );
     }
-  });
+  }, []);
 
   function changeHandler(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
+
   async function handleSubmit(e) {
     e.preventDefault();
     loadingAlert('جاري تسجيل الدخول...');
     try {
       const response = await axios.post(API.login, form);
       if (response.status === 200) {
-        console.log('Login successful');
         successAlert('تم تسجيل الدخول بنجاح');
         closeAlert();
         cookies.set('token', response.data.token);
@@ -49,9 +65,10 @@ export default function Login() {
       } else {
         closeAlert();
         errorAlert(response.data.message);
+        setResponse(response.data.message);
       }
     } catch (error) {
-      if (error.response.data.message === 'هذا الايميل غير مفعل بعد') {
+      if (error?.response?.data?.message === 'هذا الايميل غير مفعل بعد') {
         closeAlert();
         successAlert(error.response.data.message);
         setTimeout(() => {
@@ -63,94 +80,144 @@ export default function Login() {
           });
         }, 1500);
       }
-      console.error('Error during login:', error);
-      errorAlert(error.response.data.message);
+      errorAlert(
+        error?.response?.data?.message || 'حدث خطأ أثناء تسجيل الدخول'
+      );
+      setResponse(error?.response?.data?.message);
     }
   }
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        backgroundColor: '#e0e3e5',
-      }}
-    >
-      <NavBar margin="50px" />
 
-      {/* المحتوى الرئيسي */}
-      <main className="flex-grow-1 d-flex justify-content-center align-items-center">
-        <div
-          className="card shadow-lg"
-          style={{ width: '700px', borderRadius: '15px' }}
+  return (
+    <Box sx={{ backgroundColor: '#e0e3e5', minHeight: '100vh' }}>
+      <NavBar margin="50px" />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="90vh"
+        sx={{ py: 6 }}
+      >
+        <Card
+          sx={{
+            width: { xs: '100%', sm: 500 },
+            borderRadius: 5,
+            boxShadow: 6,
+            p: 2,
+            background: 'linear-gradient(135deg, #f8fafc 60%, #e3f2fd 100%)',
+          }}
         >
-          <div className="card-header text-center p-3 bg-primary">
-            <h2 className="text-center text-white">تسجيل الدخول</h2>
-          </div>
-          <div className="card-body p-4">
-            <p className="text-center text-muted">
-              مرحبًا بك! يرجى تسجيل الدخول للوصول إلى حسابك.
-            </p>
-            <Form
-              className="shadow p-4 rounded bg-white"
-              onSubmit={handleSubmit}
+          <CardContent>
+            <Typography
+              variant="h4"
+              fontWeight={700}
+              color="primary.main"
+              align="center"
+              sx={{ mb: 1, fontFamily: 'Almarai' }}
             >
-              <Form.Group className="mb-3" controlId="email">
-                <Form.Label className="fw-bold text-secondary">
-                  البريد الإلكتروني <span className="text-danger">*</span>
-                </Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="ادخل بريدك الإلكتروني"
-                  required
-                  size="md"
-                  onChange={changeHandler}
-                  name="email"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="password">
-                <Form.Label className="fw-bold text-secondary">
-                  كلمة المرور <span className="text-danger">*</span>
-                </Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="ادخل كلمة المرور"
-                  required
-                  size="md"
-                  onChange={changeHandler}
-                  name="password"
-                />
-              </Form.Group>
-              <div className="text-center">
-                <Button type="submit" className="btn btn-primary btn-md px-4">
-                  تسجيل الدخول
-                </Button>
-              </div>
-            </Form>
-            <div className="text-center mt-3">
+              تسجيل الدخول
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              color="text.secondary"
+              align="center"
+              sx={{ mb: 3 }}
+            >
+              مرحبًا بك! يرجى تسجيل الدخول للوصول إلى حسابك.
+            </Typography>
+            <Divider sx={{ mb: 3 }} />
+            <Box component="form" onSubmit={handleSubmit} noValidate>
+              <TextField
+                label="البريد الإلكتروني"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={changeHandler}
+                required
+                fullWidth
+                sx={{ mb: 2 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon color="primary" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="كلمة المرور"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                value={form.password}
+                onChange={changeHandler}
+                required
+                fullWidth
+                sx={{ mb: 2 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon color="primary" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((show) => !show)}
+                        edge="end"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {response && (
+                <Alert severity="error" sx={{ mb: 2, textAlign: 'right' }}>
+                  {response}
+                </Alert>
+              )}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth
+                sx={{ fontWeight: 'bold', borderRadius: 2, mt: 1 }}
+                disabled={!form.email || !form.password}
+              >
+                تسجيل الدخول
+              </Button>
+            </Box>
+            <Divider sx={{ my: 3 }} />
+            <Typography align="center" color="text.secondary">
               <Link
                 to="/forget-password"
-                className="text-decoration-none text-primary"
+                style={{
+                  color: '#1976d2',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                }}
               >
                 هل نسيت كلمة المرور؟
               </Link>
-            </div>
-            <div className="text-center mt-3">
-              <p className="text-muted">
-                ليس لديك حساب؟{' '}
-                <Link
-                  to="/register"
-                  className="text-decoration-none text-primary"
-                >
-                  تسجيل حساب جديد
-                </Link>
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
-
+            </Typography>
+            <Typography align="center" color="text.secondary" sx={{ mt: 2 }}>
+              ليس لديك حساب؟{' '}
+              <Link
+                to="/register"
+                style={{
+                  color: '#1976d2',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                }}
+              >
+                تسجيل حساب جديد
+              </Link>
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
       <Footer margin="50px" />
-    </div>
+    </Box>
   );
 }

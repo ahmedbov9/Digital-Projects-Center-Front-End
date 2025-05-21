@@ -248,6 +248,18 @@ export default function Order() {
         return 'غير معروف';
     }
   };
+  const updateOrderPriceOfferStatus = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'قيد الانتظار';
+      case 'accepted':
+        return 'تم قبول العرض';
+      case 'rejected':
+        return 'مرفوض';
+      default:
+        return 'غير معروف';
+    }
+  };
 
   return (
     <div
@@ -415,42 +427,44 @@ export default function Order() {
                     </Typography>
                   </Box>
                 </Stack>
-                <Stack
-                  direction="row"
-                  alignItems="flex-start"
-                  spacing={2}
-                  gap={1}
-                >
-                  <Avatar sx={{ bgcolor: theme.palette.secondary.light }}>
-                    <CalendarMonthIcon />
-                  </Avatar>
-                  <Box>
-                    <Typography variant="subtitle2" color="text.secondary">
-                      تاريخ التسليم المتوقع
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      fontWeight={500}
-                      sx={{
-                        lineHeight: 2,
-                        fontSize: 16,
-                        borderRadius: 2,
-                        p: 2,
-                        mt: 1,
-                        boxShadow: 0,
-                        border: `1px solid ${theme.palette.divider}`,
-                      }}
-                    >
-                      {order.serviceDeleveryDate
-                        ? formatDistanceToNow(order.serviceDeleveryDate, {
-                            locale: ar,
-                            addSuffix: true,
-                            includeSeconds: true,
-                          })
-                        : '-'}
-                    </Typography>
-                  </Box>
-                </Stack>
+                {order.serviceDeleveryDate && (
+                  <Stack
+                    direction="row"
+                    alignItems="flex-start"
+                    spacing={2}
+                    gap={1}
+                  >
+                    <Avatar sx={{ bgcolor: theme.palette.secondary.light }}>
+                      <CalendarMonthIcon />
+                    </Avatar>
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary">
+                        تاريخ التسليم المتوقع
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        fontWeight={500}
+                        sx={{
+                          lineHeight: 2,
+                          fontSize: 16,
+                          borderRadius: 2,
+                          p: 2,
+                          mt: 1,
+                          boxShadow: 0,
+                          border: `1px solid ${theme.palette.divider}`,
+                        }}
+                      >
+                        {order.serviceDeleveryDate
+                          ? formatDistanceToNow(order.serviceDeleveryDate, {
+                              locale: ar,
+                              addSuffix: true,
+                              includeSeconds: true,
+                            })
+                          : '-'}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                )}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Stack direction="row" alignItems="center" spacing={2} gap={1}>
@@ -520,11 +534,7 @@ export default function Order() {
                         <Chip
                           label={
                             statusMap[order.priceOffer.status]?.label ||
-                            order.priceOffer.status === 'rejected'
-                              ? 'مرفوض'
-                              : order.priceOffer.status === 'accepted'
-                              ? 'تم قبول العرض'
-                              : 'قيد الانتظار'
+                            updateOrderPriceOfferStatus(order.priceOffer.status)
                           }
                           color={
                             statusMap[order.priceOffer.status]?.color ||

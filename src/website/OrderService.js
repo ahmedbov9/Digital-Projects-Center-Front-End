@@ -1,10 +1,26 @@
-import Form from 'react-bootstrap/Form';
+import { useState } from 'react';
 import NavBar from './components/Navbar';
-import Button from 'react-bootstrap/Button';
+import Footer from './components/Footer';
 import { Axios } from '../Api/axios';
 import { API } from '../Api/Api';
-import { useState } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
+import { UserContext, useUserContext } from '../context/UserContext';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Grid,
+  Stack,
+  TextField,
+  Chip,
+} from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import WebIcon from '@mui/icons-material/Web';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import {
   closeAlert,
   confirmAlert,
@@ -12,9 +28,6 @@ import {
   loadingAlert,
   successAlert,
 } from './components/Alertservice';
-import Footer from './components/Footer';
-import { useUserContext } from '../context/UserContext';
-import Card from 'react-bootstrap/Card';
 
 const SERVICES = [
   {
@@ -33,6 +46,7 @@ const SERVICES = [
       'PHP',
     ],
     image: '../Assets/web-development.jpg',
+    icon: <WebIcon color="primary" sx={{ fontSize: 36 }} />,
   },
   {
     key: 'technical-consultation',
@@ -40,6 +54,7 @@ const SERVICES = [
     technicalList: ['تخطيط المشروع', 'توجيه فني'],
     description: 'نقدم لك حلولاً تقنية تساعدك في اتخاذ قرارات ذكية لمشروعك.',
     image: '../Assets/technical_consultation.jpg',
+    icon: <TipsAndUpdatesIcon color="warning" sx={{ fontSize: 36 }} />,
   },
   {
     key: 'technical-support',
@@ -47,21 +62,23 @@ const SERVICES = [
     technicalList: ['دعم فني', 'استكشاف الأخطاء وإصلاحها'],
     description: 'فريقنا جاهز لمساعدتك في حل المشكلات التقنية بسرعة وكفاءة.',
     image: '../Assets/technical_support.jpg',
+    icon: <SupportAgentIcon color="success" sx={{ fontSize: 36 }} />,
   },
 ];
 
 export default function OrderService() {
-  const { currentUser } = useUserContext();
+  const { currentUser } = useUserContext(UserContext);
 
   const [formData, setFormData] = useState({
+    firstName: currentUser?.firstName || '',
+    lastName: currentUser?.lastName || '',
+    email: currentUser?.email || '',
+    mobileNumber: currentUser?.mobileNumber || '',
     serviceType: '',
     serviceDetails: '',
     attachment: null,
-    firstName: currentUser.firstName,
-    lastName: currentUser.lastName,
-    email: currentUser.email,
-    mobileNumber: currentUser.mobileNumber,
   });
+  const [detailsError, setDetailsError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -70,6 +87,18 @@ export default function OrderService() {
         ...prevData,
         attachment: files[0],
       }));
+    } else if (name === 'serviceDetails') {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+      if (value.length < 100) {
+        setDetailsError('يرجى كتابة تفاصيل كافية (100 حرف على الأقل)');
+      } else if (value.length > 500) {
+        setDetailsError('يجب ألا تتجاوز التفاصيل 500 حرف');
+      } else {
+        setDetailsError('');
+      }
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -87,6 +116,18 @@ export default function OrderService() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.serviceType) {
+      errorAlert('يرجى اختيار نوع الخدمة');
+      return;
+    }
+    if (formData.serviceDetails.length < 20) {
+      setDetailsError('يرجى كتابة تفاصيل كافية (20 حرف على الأقل)');
+      return;
+    }
+    if (formData.serviceDetails.length > 500) {
+      setDetailsError('يجب ألا تتجاوز التفاصيل 500 حرف');
+      return;
+    }
     const confirmed = await confirmAlert({
       message: 'هل أنت متأكد أنك تريد إرسال الطلب؟',
       title: 'تأكيد',
@@ -109,10 +150,6 @@ export default function OrderService() {
           serviceType: '',
           serviceDetails: '',
           attachment: null,
-          firstName: currentUser.firstName,
-          lastName: currentUser.lastName,
-          email: currentUser.email,
-          mobileNumber: currentUser.mobileNumber,
         });
         closeAlert();
         successAlert('تم ارسال الطلب بنجاح وسنعمل عليه في أقرب وقت ممكن');
@@ -125,119 +162,178 @@ export default function OrderService() {
       errorAlert(error?.response?.data?.message || 'حدث خطأ غير متوقع');
     }
   };
+
   return (
-    <div style={{ backgroundColor: '#f8f9fa' }}>
+    <Box sx={{ backgroundColor: '#e0e3e5', minHeight: '100vh' }}>
       <NavBar />
-      <div className="container py-5" style={{ maxWidth: '900px' }}>
-        <h1 className="text-center mb-4 display-5 text-primary">طلب خدمة</h1>
-        <p className="text-center mb-4 text-muted lead">
+      <Box sx={{ maxWidth: 950, mx: 'auto', py: 5 }}>
+        <Typography
+          variant="h3"
+          color="primary"
+          align="center"
+          fontWeight={700}
+          sx={{ mb: 1, fontFamily: 'Almarai' }}
+        >
+          طلب خدمة
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          color="text.secondary"
+          align="center"
+          sx={{ mb: 4 }}
+        >
           اختر الخدمة المطلوبة واملأ تفاصيل الطلب وسنقوم بالتواصل معك بأسرع وقت
           ممكن.
-        </p>
+        </Typography>
 
-        <Form>
-          <div className="row g-4 mb-4">
-            {SERVICES.map((service) => (
-              <div className="col-md-4 shadow-lg" key={service.key}>
-                <Form.Check
-                  type="radio"
-                  id={service.key}
-                  name="serviceType"
-                  value={service.key}
-                  checked={formData.serviceType === service.key}
-                  onChange={() => handleServiceSelect(service.key)}
-                  className="d-none"
-                />
-                <Card
-                  onClick={() => handleServiceSelect(service.key)}
-                  className={`shadow-sm h-100 service-card position-relative ${
+        {/* اختيار الخدمة */}
+        <Grid spacing={3} sx={{ mb: 3 }} gap={2} container width={'100%'}>
+          {SERVICES.map((service) => (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              key={service.key}
+              flexBasis={300}
+              flexGrow={1}
+            >
+              <Card
+                onClick={() => handleServiceSelect(service.key)}
+                sx={{
+                  cursor: 'pointer',
+                  border:
                     formData.serviceType === service.key
-                      ? 'border-primary'
-                      : 'border-light'
-                  }`}
-                  style={{
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    borderWidth:
-                      formData.serviceType === service.key ? '3px' : '3px',
-                  }}
-                >
-                  <Card.Img
-                    variant="top"
-                    src={service.image}
-                    alt={service.title}
-                  />
-                  <Card.Body>
-                    <Card.Title className="text-primary">
-                      {service.title}
-                    </Card.Title>
-                    <Card.Text>{service.description}</Card.Text>
-                    {service.technicalList && (
-                      <ul className="list-unstyled">
-                        {service.technicalList.map((item, idx) => (
-                          <li key={idx} className="text-muted">
-                            - {item}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </Card.Body>
-                  {formData.serviceType === service.key && (
-                    <FaCheckCircle
-                      style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        color: '#0d6efd',
-                        fontSize: '1.8rem',
-                        backgroundColor: 'white',
-                        borderRadius: '50%',
-                      }}
-                      title="محدد"
-                    />
-                  )}
-                </Card>
-              </div>
-            ))}
-          </div>
-        </Form>
+                      ? '3px solid #1976d2'
+                      : '2px solid #eee',
+                  boxShadow: formData.serviceType === service.key ? 6 : 2,
+                  borderRadius: 4,
 
-        {/* هنا تستمر فورم تفاصيل الطلب كالسابق */}
-        <Form
-          className="shadow-sm p-4 rounded bg-white"
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexGrow: 1,
+                  width: '100%',
+                  height: '100%',
+                  '&:hover': {
+                    boxShadow: 8,
+                  },
+                }}
+                elevation={0}
+              >
+                <CardMedia
+                  component="img"
+                  height="120"
+                  image={service.image}
+                  alt={service.title}
+                  sx={{
+                    objectFit: 'cover',
+                    borderTopLeftRadius: 16,
+                    borderTopRightRadius: 16,
+                  }}
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Stack direction="row" alignItems="center" spacing={1} mb={1}>
+                    {service.icon}
+                    <Typography variant="h6" color="primary" fontWeight={700}>
+                      {service.title}
+                    </Typography>
+                    {formData.serviceType === service.key && (
+                      <CheckCircleIcon color="primary" sx={{ ml: 'auto' }} />
+                    )}
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary" mb={1}>
+                    {service.description}
+                  </Typography>
+                  <Stack direction="row" spacing={1} flexWrap="wrap">
+                    {service.technicalList &&
+                      service.technicalList.map((item, idx) => (
+                        <Chip
+                          key={idx}
+                          label={item}
+                          size="small"
+                          color="default"
+                          sx={{ mb: 0.5 }}
+                        />
+                      ))}
+                  </Stack>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* نموذج الطلب */}
+        <Box
+          component="form"
           onSubmit={handleSubmit}
+          sx={{
+            background: '#fff',
+            borderRadius: 4,
+            boxShadow: 4,
+            p: { xs: 2, md: 4 },
+            maxWidth: 700,
+            mx: 'auto',
+          }}
         >
-          <Form.Group className="mb-3" controlId="attachment">
-            <Form.Label className="fw-bold text-secondary">المرفقات</Form.Label>
-            <Form.Control
-              type="file"
-              name="attachment"
-              onChange={handleInputChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="details">
-            <Form.Label className="fw-bold text-secondary">
-              تفاصيل الطلب <span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={4}
-              placeholder="اكتب تفاصيل الخدمة المطلوبة"
+          <Typography variant="h6" color="primary" fontWeight={700} mb={2}>
+            تفاصيل الطلب
+          </Typography>
+          <Stack spacing={3}>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <AttachFileIcon color="action" />
+              <Button
+                variant="outlined"
+                component="label"
+                sx={{ borderRadius: 2, fontWeight: 'bold' }}
+              >
+                إرفاق ملف
+                <input
+                  type="file"
+                  name="attachment"
+                  hidden
+                  onChange={handleInputChange}
+                />
+              </Button>
+              {formData.attachment && (
+                <Typography variant="body2" color="text.secondary">
+                  {formData.attachment.name}
+                </Typography>
+              )}
+            </Stack>
+            <TextField
+              label="تفاصيل الطلب"
               name="serviceDetails"
               value={formData.serviceDetails}
               onChange={handleInputChange}
               required
+              fullWidth
+              multiline
+              minRows={4}
+              inputProps={{ maxLength: 500 }}
+              error={!!detailsError}
+              helperText={
+                detailsError || `${formData.serviceDetails.length} / 500 حرف`
+              }
             />
-          </Form.Group>
-
-          <div className="text-center">
-            <Button type="submit" className="btn btn-primary px-5">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              sx={{ borderRadius: 2, fontWeight: 'bold', mt: 2 }}
+              disabled={
+                !formData.serviceType ||
+                !!detailsError ||
+                formData.serviceDetails.length < 20
+              }
+            >
               إرسال الطلب
             </Button>
-          </div>
-        </Form>
-      </div>
+          </Stack>
+        </Box>
+      </Box>
       <Footer />
-    </div>
+    </Box>
   );
 }
