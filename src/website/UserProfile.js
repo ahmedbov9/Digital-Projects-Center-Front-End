@@ -1,39 +1,39 @@
-import NavBar from './components/Navbar';
-import Cookie from 'cookie-universal';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import Cookie from 'cookie-universal';
+
+import NavBar from './components/Navbar';
+import Footer from './components/Footer';
+import { API } from '../Api/Api';
+import { Axios } from '../Api/axios';
+import { UserContext } from '../context/UserContext';
 import { getDateDistance } from '../helper/DateDistancs';
 import {
   confirmAlert,
   confirmWhenWrite,
   errorAlert,
 } from './components/Alertservice';
-import Footer from './components/Footer';
-import { Button } from 'react-bootstrap';
-import { API } from '../Api/Api';
-import { Axios } from '../Api/axios';
-import { UserContext } from '../context/UserContext';
-import { useContext } from 'react';
 
 export default function UserProfile() {
   const cookie = Cookie();
   const { currentUser } = useContext(UserContext);
 
-  // عرض سبينر أو رسالة انتظار إذا لم تكن بيانات المستخدم جاهزة
   if (!currentUser) {
     return (
-      <div style={{ backgroundColor: '#e0e3e5', minHeight: '100vh' }}>
-        <NavBar margin={'50px'} />
+      <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+        <NavBar />
         <div className="d-flex justify-content-center align-items-center vh-100">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">جاري التحميل...</span>
           </div>
         </div>
-        <Footer margin={'100px'} />
+        <Footer />
       </div>
     );
   }
 
-  async function handleLogout() {
+  const handleLogout = async () => {
     const confirmed = await confirmAlert({
       message: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
       title: 'تأكيد',
@@ -41,11 +41,9 @@ export default function UserProfile() {
     });
     if (!confirmed) return;
 
-    // Clear the token from cookies
     cookie.remove('token');
-    // Redirect to login page
     window.location.pathname = '/';
-  }
+  };
 
   const handleDeleteAccount = async () => {
     const email = await confirmWhenWrite({
@@ -55,6 +53,7 @@ export default function UserProfile() {
       inputPlaceholder: 'البريد الإلكتروني',
     });
     if (!email) return;
+
     const confirmed = await confirmAlert({
       message: 'هل أنت متأكد أنك تريد حذف حسابك؟',
       title: 'تأكيد',
@@ -65,9 +64,7 @@ export default function UserProfile() {
     try {
       const response = await Axios.delete(
         `${API.deleteAccount}/${currentUser._id}`,
-        {
-          data: { email },
-        }
+        { data: { email } }
       );
       if (response.status === 200) {
         cookie.remove('token');
@@ -76,66 +73,74 @@ export default function UserProfile() {
         errorAlert(response.data.message);
       }
     } catch (error) {
-      errorAlert(error?.response.data.message);
+      errorAlert(error?.response?.data?.message || 'حدث خطأ أثناء الحذف');
     }
   };
 
   return (
-    <div style={{ backgroundColor: '#e0e3e5' }}>
-      <NavBar margin={'50px'} />
-      <div>
-        <div className="container d-flex vh-100">
-          <div
-            className="card shadow-lg col-lg-12 col-md-12"
-            style={{ borderRadius: '15px' }}
-          >
-            <div className="card-body p-4">
-              <h2 className="text-center text-primary mb-4">الملف الشخصي</h2>
-              <p className="text-center text-muted">
-                مرحبًا بك! يرجى تسجيل الدخول للوصول إلى حسابك.
-              </p>
-              <div>
-                <h5 className="mb-3">
-                  اسم المستخدم: {currentUser?.firstName} {currentUser?.lastName}
-                </h5>
-                <h5 className="mb-3">
-                  البريد الإلكتروني: {currentUser?.email}
-                </h5>
-                <h5 className="mb-3">
-                  رقم الهاتف: {currentUser?.mobileNumber}
-                </h5>
-                <h5 className="mb-3">
-                  تاريخ التسجيل : {getDateDistance(currentUser?.createdAt)}
-                </h5>
-                <button onClick={handleLogout} className="btn btn-danger mt-3">
-                  تسجيل الخروج
-                </button>
-                <div className="mt-4 d-flex gap-3 flex-wrap">
-                  <Link
-                    to={`/edit-profile/${currentUser?._id}`}
-                    className="btn btn-primary mt-2"
-                  >
-                    تعديل الملف الشخصي
-                  </Link>
-                  <Link
-                    to="/change-password"
-                    className="btn btn-secondary mt-2 ms-2"
-                  >
-                    تغيير كلمة المرور
-                  </Link>
-                  <Button
-                    onClick={handleDeleteAccount}
-                    className="btn btn-danger mt-2 ms-2"
-                  >
-                    حذف الحساب
-                  </Button>
+    <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+      <NavBar />
+      <div className="container py-5">
+        <div className="row justify-content-center">
+          <div className="col-lg-8">
+            <div className="card shadow border-0 rounded-4">
+              <div className="card-body p-5">
+                <h2 className="text-center text-primary mb-4">الملف الشخصي</h2>
+                <p className="text-center text-muted mb-5">
+                  مرحبًا {currentUser.firstName}! إليك تفاصيل حسابك.
+                </p>
+
+                <div className="mb-4">
+                  <h5>
+                    <strong>الاسم:</strong> {currentUser.firstName}{' '}
+                    {currentUser.lastName}
+                  </h5>
+                  <h5>
+                    <strong>البريد الإلكتروني:</strong> {currentUser.email}
+                  </h5>
+                  <h5>
+                    <strong>رقم الجوال:</strong> {currentUser.mobileNumber}
+                  </h5>
+                  <h5>
+                    <strong>تاريخ التسجيل:</strong>{' '}
+                    {getDateDistance(currentUser.createdAt)}
+                  </h5>
+                </div>
+
+                <div className="row mt-4 g-3">
+                  <div className="col-md-6 d-grid">
+                    <Link
+                      to={`/edit-profile/${currentUser._id}`}
+                      className="btn btn-primary"
+                    >
+                      تعديل الملف الشخصي
+                    </Link>
+                  </div>
+                  <div className="col-md-6 d-grid">
+                    <Link
+                      to="/change-password"
+                      className="btn btn-outline-secondary"
+                    >
+                      تغيير كلمة المرور
+                    </Link>
+                  </div>
+                  <div className="col-md-6 d-grid">
+                    <Button variant="danger" onClick={handleDeleteAccount}>
+                      حذف الحساب
+                    </Button>
+                  </div>
+                  <div className="col-md-6 d-grid">
+                    <Button variant="dark" onClick={handleLogout}>
+                      تسجيل الخروج
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Footer margin={'100px'} />
+      <Footer />
     </div>
   );
 }

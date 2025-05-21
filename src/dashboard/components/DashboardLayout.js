@@ -150,51 +150,58 @@ export default function DashboardLayout({ children }) {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" sx={{ width: '100%' }}>
-        <Toolbar sx={{ justifyContent: 'space-between', position: 'relative' }}>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={toggleDrawer}
-            sx={{ position: 'absolute', right: '50px' }}
-          >
-            <MenuIcon sx={{ fontSize: '40px' }} />
-          </IconButton>
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <AppBar position="fixed" sx={{ width: '100%' }}>
+          <Toolbar sx={{ justifyContent: 'space', position: 'relative' }}>
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={toggleDrawer}
+              sx={{ position: 'absolute', right: '50px' }}
+            >
+              <MenuIcon sx={{ fontSize: '40px' }} />
+            </IconButton>
 
-          <Typography
-            variant="h5"
-            noWrap
-            sx={{
-              margin: '0 auto',
-              fontFamily: 'Almarai',
-              fontWeight: 'bold',
-            }}
-          >
-            نظام الإدارة
-          </Typography>
-        </Toolbar>
-      </AppBar>
+            <Typography
+              variant="h5"
+              noWrap
+              sx={{
+                margin: '0 auto',
+                fontFamily: 'Almarai',
+                fontWeight: 'bold',
+              }}
+            >
+              نظام الإدارة
+            </Typography>
+          </Toolbar>
+        </AppBar>
 
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={toggleDrawer}
-        ModalProps={{ keepMounted: true }}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-          },
-        }}
-      >
-        {drawerContent}
-      </Drawer>
+        <Drawer
+          anchor="right"
+          open={drawerOpen}
+          onClose={toggleDrawer}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawerContent}
+        </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3, width: '100%' }}>
-        <Toolbar />
-        {children}
+        <Box component="main" sx={{ flexGrow: 1, p: 3, width: '100%' }}>
+          <Toolbar />
+          {children}
+        </Box>
       </Box>
-    </Box>
+      <div className="d-flex justify-content-center align-items-center flex-column">
+        <Link to={'/'} className="btn btn-success mx-2 w-25">
+          الانتقال الى الموقع
+        </Link>
+      </div>
+    </>
   );
 }

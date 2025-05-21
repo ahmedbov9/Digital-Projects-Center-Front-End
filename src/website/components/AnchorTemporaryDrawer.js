@@ -11,14 +11,19 @@ import HomeIcon from '@mui/icons-material/Home';
 import BuildIcon from '@mui/icons-material/Build';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import LoginIcon from '@mui/icons-material/Login';
 import PersonIcon from '@mui/icons-material/Person';
-import { Fragment, useState } from 'react';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Fragment, useContext, useState } from 'react';
 import Cookie from 'cookie-universal';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
 export default function AnchorTemporaryDrawer() {
   const [isOpen, setIsOpen] = useState(false);
+  const { currentUser } = useContext(UserContext);
   const cookies = Cookie();
   const isLoggedIn = cookies.get('token') ? true : false;
+  const isAdmin = currentUser?.isAdmin || false;
   const navigate = useNavigate();
   const toggleDrawer = (open) => (event) => {
     if (
@@ -33,12 +38,25 @@ export default function AnchorTemporaryDrawer() {
     { text: 'الرئيسية', icon: <HomeIcon />, path: '/' },
     { text: 'طلب خدمة', icon: <BuildIcon />, path: '/order-service' },
     { text: 'تواصل معنا', icon: <ContactMailIcon />, path: '/contact' },
+    { text: 'تسجيل الدخول', icon: <LoginIcon />, path: '/login' },
     { text: 'طلباتي', icon: <AssignmentIcon />, path: '/my-orders' },
     { text: 'الملف الشخصي', icon: <PersonIcon />, path: '/user-profile' },
+    { text: 'لوحة التحكم', icon: <DashboardIcon />, path: '/dashboard' },
   ];
-  const displayListItems = isLoggedIn
-    ? fullListItems
-    : fullListItems.slice(0, 3);
+  const handleAdminAndUserItems = fullListItems.filter((item) => {
+    if (!isLoggedIn) {
+      return (
+        item.text === 'الرئيسية' ||
+        item.text === 'تسجيل الدخول' ||
+        item.text === 'تواصل معنا' ||
+        item.text === 'طلب خدمة'
+      );
+    } else if (isAdmin) {
+      return item.text !== 'تسجيل الدخول';
+    } else {
+      return item.text !== 'لوحة التحكم' && item.text !== 'تسجيل الدخول';
+    }
+  });
 
   const list = () => (
     <Box
@@ -48,7 +66,7 @@ export default function AnchorTemporaryDrawer() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {displayListItems.map((item, index) => (
+        {handleAdminAndUserItems.map((item, index) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton onClick={() => navigate(item.path)}>
               <ListItemIcon>{item.icon}</ListItemIcon>

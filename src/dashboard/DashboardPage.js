@@ -12,7 +12,6 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import PeopleIcon from '@mui/icons-material/People';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import SaudiRiyalLogo from '../Assets/Saudi_Riyal_Symbol.svg.webp';
 import DashboardLayout from './components/DashboardLayout';
 import { API } from '../Api/Api';
 import { Axios } from '../Api/axios';
@@ -154,7 +153,7 @@ export default function DashboardPage() {
                   <Box display="flex" alignItems="center">
                     {value}
                     <img
-                      src={SaudiRiyalLogo}
+                      src={'../Assets/Saudi_Riyal_Symbol.svg.webp'}
                       alt="ريال"
                       style={{ width: 24, marginRight: 6 }}
                     />

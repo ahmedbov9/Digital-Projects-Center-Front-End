@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import NavBar from './Navbar';
 import Footer from './Footer';
-import saudiRiyalLogo from '../../Assets/Saudi_Riyal_Symbol.svg.webp';
 import { getDateDistance } from '../../helper/DateDistancs';
 import { Button } from 'react-bootstrap';
 import {
@@ -191,7 +190,7 @@ export default function OrderDetails() {
                   <span className="d-inline-flex align-items-center gap-1">
                     <span>{order.priceOffer.price}</span>
                     <img
-                      src={saudiRiyalLogo}
+                      src={'../Assets/Saudi_Riyal_Symbol.svg.webp'}
                       width="17"
                       height="17"
                       alt="ريال"
@@ -242,7 +241,7 @@ export default function OrderDetails() {
                       <span className="d-inline-flex align-items-center gap-1">
                         <span>{order.priceOffer.price}</span>
                         <img
-                          src={saudiRiyalLogo}
+                          src={'../Assets/Saudi_Riyal_Symbol.svg.webp'}
                           width="17"
                           height="17"
                           alt="ريال"
