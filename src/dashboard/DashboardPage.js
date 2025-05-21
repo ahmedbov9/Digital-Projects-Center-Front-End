@@ -18,12 +18,14 @@ import { Axios } from '../Api/axios';
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { FormatNumber } from '../helper/FormatNumber';
+import LoadingSkeleton from '../website/components/LoadingSkeleton';
 export default function DashboardPage() {
   const [totalUsers, setTotalUsers] = useState([]);
   const [totalOrders, setTotalOrders] = useState([]);
   useState(0);
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [orderStatus, setOrderStatus] = useState({});
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,6 +45,8 @@ export default function DashboardPage() {
         });
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -182,7 +186,6 @@ export default function DashboardPage() {
         >
           لوحة التحكم الرئيسية
         </Typography>
-
         <Grid
           container
           spacing={3}
@@ -190,11 +193,9 @@ export default function DashboardPage() {
           className={'col-lg-8 col-md-12 col-sm-6 mx-auto'}
           mb={6}
         >
-          {mainStats.map(renderCard)}
+          {!loading ? mainStats.map(renderCard) : <LoadingSkeleton line={3} />}
         </Grid>
-
         <Divider sx={{ my: 4 }} />
-
         <Typography
           variant="h5"
           fontWeight="bold"
@@ -205,12 +206,15 @@ export default function DashboardPage() {
         >
           حالة الطلبات
         </Typography>
-
-        <Grid container spacing={3} justifyContent="center">
-          {orderStats.map((item) =>
-            renderCard({ ...item, icon: <PendingActionsIcon /> })
-          )}
-        </Grid>
+        {!loading ? (
+          <Grid container spacing={3} justifyContent="center">
+            {orderStats.map((item) =>
+              renderCard({ ...item, icon: <PendingActionsIcon /> })
+            )}
+          </Grid>
+        ) : (
+          <LoadingSkeleton line={3} />
+        )}
         <Outlet />
       </DashboardLayout>
     </Box>
