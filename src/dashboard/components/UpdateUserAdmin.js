@@ -151,7 +151,7 @@ export default function UpdateUserFromAdmin() {
                   تعديل
                 </Button>
 
-                <Link to={'/dashboard/user'} className="btn btn-secondary">
+                <Link to={'/dashboard/users'} className="btn btn-secondary">
                   رجوع
                 </Link>
               </div>
