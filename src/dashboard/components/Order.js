@@ -260,7 +260,7 @@ export default function Order() {
         return 'غير معروف';
     }
   };
-
+  console.log(order.serviceDeleveryDate);
   return (
     <div
       style={{

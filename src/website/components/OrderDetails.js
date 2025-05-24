@@ -20,7 +20,7 @@ import RejectOfferModal from './RejectOfferModel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { faMailBulk } from '@fortawesome/free-solid-svg-icons';
-
+import TodayIcon from '@mui/icons-material/Today';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -39,6 +39,9 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
+import { FormatNumber } from '../../helper/FormatNumber';
+import { formatDistanceToNowStrict } from 'date-fns';
+import { ar } from 'date-fns/locale';
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -263,7 +266,7 @@ export default function OrderDetails() {
                         color: 'text.secondary',
                         lineHeight: 2,
                         fontSize: 16,
-                        background: '#f5f5f5',
+                        background: '#e0e0e0',
                         borderRadius: 2,
                         p: 2,
                         mt: 1,
@@ -292,7 +295,7 @@ export default function OrderDetails() {
                     </Typography>
                     <Typography variant="body1" fontWeight={500}>
                       <span className="d-inline-flex align-items-center gap-1">
-                        <span>{order.priceOffer.price}</span>
+                        <span>{FormatNumber(order.priceOffer.price)}</span>
                         <img
                           src={'../Assets/Saudi_Riyal_Symbol.svg.webp'}
                           width="17"
@@ -304,6 +307,39 @@ export default function OrderDetails() {
                   </Box>
                 </Stack>
               </Grid>
+              {order.serviceDeleveryDate && (
+                <Grid item xs={12}>
+                  <Stack
+                    direction="row"
+                    alignItems="flex-start"
+                    spacing={2}
+                    gap={1}
+                  >
+                    <Avatar sx={{ bgcolor: 'green' }}>
+                      <TodayIcon />
+                    </Avatar>
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary">
+                        تاريخ التسليم المتوقع
+                      </Typography>
+                      <Typography variant="body1" fontWeight={500}>
+                        <span className="d-inline-flex align-items-center gap-1">
+                          <span>
+                            {formatDistanceToNowStrict(
+                              order.serviceDeleveryDate,
+                              {
+                                addSuffix: true,
+                                locale: ar,
+                                includeSeconds: true,
+                              }
+                            )}
+                          </span>
+                        </span>
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <Stack
                   direction="row"
@@ -386,6 +422,8 @@ export default function OrderDetails() {
                       <Typography
                         variant="body1"
                         fontWeight={500}
+                        display={'flex'}
+                        gap={0.5}
                         color="warning.main"
                       >
                         {order.priceOffer.price}
@@ -560,14 +598,14 @@ export default function OrderDetails() {
               order.serviceStatus === 'wait-for-approval' && (
                 <Box display="flex" justifyContent="center" gap={2}>
                   <Button
-                    variant="contained"
+                    variant="success"
                     color="primary"
                     onClick={handleAcceptOffer}
                   >
                     قبول العرض
                   </Button>
                   <Button
-                    variant="outlined"
+                    variant="danger"
                     color="error"
                     onClick={handleRejectOffer}
                   >
