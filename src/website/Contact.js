@@ -109,7 +109,7 @@ export default function Contact() {
 
   return (
     <>
-      <Box sx={{ backgroundColor: '#e0e3e5', minHeight: '100vh', pb: 5 }}>
+      <Box sx={{ backgroundColor: '#e0e3e5', minHeight: '100vh' }}>
         <NavBar />
         <Box sx={{ py: 4 }}>
           <Typography
