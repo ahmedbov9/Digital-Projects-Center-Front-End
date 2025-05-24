@@ -193,6 +193,7 @@ export default function Contact() {
                       onChange={handleInputChange}
                       required
                       fullWidth
+                      inputProps={{ maxLength: 250 }}
                       error={!!errors.message}
                       helperText={
                         errors.message || `${formData.message.length} / 250 حرف`
