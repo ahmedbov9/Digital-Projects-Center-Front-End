@@ -105,7 +105,6 @@ export default function NavBar(props) {
                   mx: 1,
                   '&:hover': { color: '#e3f2fd', background: 'transparent' },
                 }}
-                startIcon={<PersonIcon />}
               >
                 الملف الشخصي
               </Button>

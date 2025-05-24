@@ -1,8 +1,18 @@
-import { Form } from 'react-bootstrap';
+import { useState } from 'react';
 import Footer from '../components/Footer';
 import NavBar from '../components/Navbar';
-import { Button, Container } from 'react-bootstrap';
-import { useState } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  Alert,
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import InputAdornment from '@mui/material/InputAdornment';
 import {
   closeAlert,
   errorAlert,
@@ -13,8 +23,10 @@ import { API } from '../../Api/Api';
 import axios from 'axios';
 
 export default function ForgetPassword() {
-  const [email, setEmail] = useState(null);
-  const hundleSubmit = async (e) => {
+  const [email, setEmail] = useState('');
+  const [response, setResponse] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     loadingAlert('جاري ارسال رابط تغيير كلمة المرور...');
     try {
@@ -24,47 +36,96 @@ export default function ForgetPassword() {
       if (response.status === 200) {
         closeAlert();
         successAlert('تم ارسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني');
+        setResponse(null);
       } else {
         closeAlert();
         errorAlert(response.data.message);
+        setResponse(response.data.message);
       }
     } catch (error) {
       closeAlert();
-      errorAlert(error.response.data.message);
+      errorAlert(error?.response?.data?.message || 'حدث خطأ أثناء الإرسال');
+      setResponse(error?.response?.data?.message);
     }
   };
 
   return (
-    <div style={{ backgroundColor: '#e0e3e5' }}>
-      <NavBar />
-      <Container>
-        <div className="row justify-content-center align-items-center vh-100">
-          <div className="col-md-6">
-            <div className="card shadow">
-              <div className="card-header bg-primary text-white">
-                <h2 className="text-center">نسيت كلمة المرور</h2>
-              </div>
-              <div className="card-body">
-                <Form onSubmit={hundleSubmit}>
-                  <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>البريد الإلكتروني</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="أدخل بريدك الإلكتروني"
-                      name="email"
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </Form.Group>
-                  <Button className="w-100" type="submit">
-                    إرسال
-                  </Button>
-                </Form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Container>
-      <Footer />
-    </div>
+    <Box sx={{ backgroundColor: '#e0e3e5', minHeight: '100vh' }}>
+      <NavBar margin="50px" />
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="90vh"
+        sx={{ py: 6 }}
+      >
+        <Card
+          sx={{
+            width: { xs: '100%', sm: 500 },
+            borderRadius: 5,
+            boxShadow: 6,
+            p: 2,
+            background: 'linear-gradient(135deg, #f8fafc 60%, #e3f2fd 100%)',
+          }}
+        >
+          <CardContent>
+            <Typography
+              variant="h4"
+              fontWeight={700}
+              color="primary.main"
+              align="center"
+              sx={{ mb: 1, fontFamily: 'Almarai' }}
+            >
+              نسيت كلمة المرور
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              color="text.secondary"
+              align="center"
+              sx={{ mb: 3 }}
+            >
+              أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور.
+            </Typography>
+            <Divider sx={{ mb: 3 }} />
+            <Box component="form" onSubmit={handleSubmit} noValidate>
+              <TextField
+                label="البريد الإلكتروني"
+                name="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                fullWidth
+                sx={{ mb: 2 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon color="primary" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {response && (
+                <Alert severity="error" sx={{ mb: 2, textAlign: 'right' }}>
+                  {response}
+                </Alert>
+              )}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth
+                sx={{ fontWeight: 'bold', borderRadius: 2, mt: 1 }}
+                disabled={!email}
+              >
+                إرسال
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+      <Footer margin="50px" />
+    </Box>
   );
 }
