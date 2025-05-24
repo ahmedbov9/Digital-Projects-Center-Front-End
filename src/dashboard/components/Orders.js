@@ -3,11 +3,20 @@ import { API } from '../../Api/Api';
 import { Axios } from '../../Api/axios';
 import DashboardLayout from './DashboardLayout';
 import TableLayout from './TableLayout';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
+import {
+  closeAlert,
+  confirmAlert,
+  errorAlert,
+  loadingAlert,
+  successAlert,
+} from '../../website/components/Alertservice';
+import { useState } from 'react';
 
 export default function Orders() {
+  const [refresher, setRefresher] = useState(0);
   const columns = [
     {
       id: 'userId.email',
@@ -82,16 +91,52 @@ export default function Orders() {
       label: 'الإجراء',
       minWidth: 100,
       render: (row) => (
-        <Link
-          style={{ fontSize: '12px' }}
-          className="btn btn-primary"
-          to={`${row._id}`}
-        >
-          عرض التفاصيل
-        </Link>
+        <div className="d-flex justify-content-center gap-2">
+          <Link
+            style={{ fontSize: '12px' }}
+            className="btn btn-primary"
+            to={`${row._id}`}
+          >
+            عرض التفاصيل
+          </Link>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ marginLeft: '10px', fontSize: '12px' }}
+            onClick={() => handleDeleteOrder(row._id)}
+          >
+            حذف الطلب{' '}
+          </Button>
+        </div>
       ),
     },
   ];
+
+  const handleDeleteOrder = async (orderId) => {
+    const confirmDelete = await confirmAlert({
+      title: 'تأكيد الحذف',
+      message: 'هل أنت متأكد أنك تريد حذف هذا الطلب؟',
+      confirmLabel: 'حذف',
+      cancelLabel: 'إلغاء',
+    });
+    if (!confirmDelete) return;
+    loadingAlert('جاري حذف الطلب...');
+    try {
+      const response = await Axios.delete(`${API.deleteOrder}/${orderId}`);
+      if (response.status === 200) {
+        closeAlert();
+        successAlert(response.data.message);
+        setRefresher((prev) => prev + 1);
+      } else {
+        closeAlert();
+        errorAlert(response.data.message);
+      }
+    } catch (error) {
+      closeAlert();
+      errorAlert(error?.response?.data?.message || 'حدث خطأ أثناء حذف الطلب');
+    }
+  };
+
   async function fetchOrders(page, limit, search = '') {
     let url = `${API.getAllOrders}?page=${page}&limit=${limit}`;
     if (search) {
@@ -116,7 +161,11 @@ export default function Orders() {
     <div style={{ backgroundColor: '#e0e3e5', minHeight: '100vh' }}>
       <DashboardLayout>
         <Typography variant="h3">الطلبات</Typography>
-        <TableLayout columns={columns} fetchDataFunction={fetchOrders} />
+        <TableLayout
+          columns={columns}
+          fetchDataFunction={fetchOrders}
+          refresher={refresher}
+        />
       </DashboardLayout>
     </div>
   );

@@ -9,13 +9,21 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import {
+  closeAlert,
+  confirmAlert,
+  errorAlert,
+  loadingAlert,
+  successAlert,
+} from '../../website/components/Alertservice';
 
 export default function Users() {
   const { currentUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const [refresher, setRefresher] = useState(0);
   const columns = [
     { id: 'email', label: 'البريد الإلكتروني', minWidth: 150 },
     { id: 'firstName', label: 'الاسم الاول', minWidth: 100 },
@@ -82,8 +90,7 @@ export default function Users() {
                   startIcon={<DeleteIcon />}
                   sx={{ gap: 0.5 }}
                   onClick={() => {
-                    // Handle delete action
-                    console.log('Delete user:', row._id);
+                    handleDeleteUser(row._id);
                   }}
                 >
                   حذف
@@ -95,6 +102,37 @@ export default function Users() {
       },
     },
   ];
+
+  const handleDeleteUser = async (userId) => {
+    const confirm = await confirmAlert({
+      title: 'تأكيد الحذف',
+      message: 'هل أنت متأكد أنك تريد حذف هذا المستخدم؟',
+      confirmText: 'حذف',
+      cancelText: 'إلغاء',
+      confirmButtonColor: '#d9534f',
+      cancelButtonColor: '#5bc0de',
+      icon: 'warning',
+    });
+
+    if (!confirm) return;
+
+    loadingAlert('جاري حذف المستخدم...');
+    try {
+      const response = await Axios.delete(
+        `${API.deleteUserFromDashboard}/${userId}`
+      );
+      closeAlert();
+      if (response.status === 200) {
+        successAlert(response.data.message);
+        setRefresher((prev) => prev + 1);
+      } else {
+        closeAlert();
+        errorAlert(response.data.message);
+      }
+    } catch (error) {
+      errorAlert(error.response.data.message || 'حدث خطأ أثناء حذف المستخدم');
+    }
+  };
 
   const fetchUsers = async (page, limit, search = '') => {
     let url = `${API.getAllUsers}?page=${page}&limit=${limit}`;
@@ -120,7 +158,11 @@ export default function Users() {
     <div style={{ backgroundColor: '#e0e3e5', minHeight: '100vh' }}>
       <DashboardLayout>
         <Typography variant="h3">المستخدمين</Typography>
-        <TableLayout columns={columns} fetchDataFunction={fetchUsers} />
+        <TableLayout
+          columns={columns}
+          fetchDataFunction={fetchUsers}
+          refresher={refresher}
+        />
       </DashboardLayout>
     </div>
   );
