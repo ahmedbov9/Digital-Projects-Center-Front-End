@@ -126,6 +126,9 @@ export default function DashboardPage() {
           borderRadius: 3,
           boxShadow: 3,
           transition: '0.3s',
+          minHeight: 100,
+          minWidth: 400,
+          display: 'flex',
           '&:hover': {
             transform: 'translateY(-6px)',
             boxShadow: 6,
@@ -190,7 +193,7 @@ export default function DashboardPage() {
           container
           spacing={3}
           justifyContent="center"
-          className={'col-lg-8 col-md-12 col-sm-6 mx-auto'}
+          className={'col-lg-8 col-md-12 col-sm-5 mx-auto'}
           mb={6}
         >
           {!loading ? mainStats.map(renderCard) : <LoadingSkeleton line={3} />}

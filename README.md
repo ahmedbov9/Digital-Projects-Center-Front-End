@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# Digital Project Center
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A digital platform specialized in providing web development services, graduation project implementation, technical consultations, and customer support.  
+A professional interface built with **React** and **MUI** featuring a user management system and a comprehensive admin dashboard.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Main Features
 
-### `npm start`
+- **Web Development**: Build modern, responsive websites using the latest technologies.
+- **Graduation Projects**: Implement high-quality, professional graduation projects.
+- **Technical Consultations**: Technical support and consultations for projects and individuals.
+- **Service Request System**: Integrated service request form with file upload and order tracking.
+- **Admin Dashboard**: Manage orders and users with advanced statistics.
+- **Authentication System**: Login/Register/Change Password/Reset Password.
+- **Interactive Alerts**: Using SweetAlert2.
+- **Arabic Language Support**: Fully Arabic interface with professional Arabic fonts.
+- **Responsive Design**: Compatible with all devices and screens.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Technologies Used
 
-### `npm test`
+- [React](https://reactjs.org/)
+- [Material UI (MUI)](https://mui.com/)
+- [React Router](https://reactrouter.com/)
+- [Axios](https://axios-http.com/)
+- [SweetAlert2](https://sweetalert2.github.io/)
+- [FontAwesome](https://fontawesome.com/)
+- [Bootstrap](https://getbootstrap.com/) (for some elements)
+- Arabic fonts (Almarai, Noto Sans Arabic, etc.)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Install dependencies:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Run the app locally:**
 
-### `npm run eject`
+   ```bash
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   Then open [http://localhost:3000](http://localhost:3000)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. **Environment setup:**
+   - Edit the `.env` file according to your API configuration.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Project Structure
 
-## Learn More
+```
+public/
+  ├── index.html
+  ├── robots.txt
+  ├── sitemap.xml
+  └── Assets/
+src/
+  ├── App.js
+  ├── Api/
+  ├── context/
+  ├── dashboard/
+  ├── website/
+  ├── fonts/
+  └── helper/
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Main Pages
 
-### Code Splitting
+- `/` : Home page
+- `/order-service` : New service request
+- `/my-orders` : User orders overview
+- `/dashboard` : Admin dashboard
+- `/login` : Login
+- `/register` : Register new account
+- `/user-profile` : User profile
+- `/contact` : Contact us
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Important Files
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **robots.txt**: Prevents indexing of private pages (dashboard, orders, etc.).
+- **sitemap.xml**: Specifies public pages for search engines.
+- **.env**: Environment settings (do not share this file publicly).
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contribution
 
-### Advanced Configuration
+To contribute or report an issue, please open an Issue or Pull Request on [GitHub](https://github.com/ahmedbov9).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+All fonts used are licensed for commercial use (see the fonts folder).  
+The code is open source for use and development.
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Developed by Ahmed Al-Faifi – 2025**
