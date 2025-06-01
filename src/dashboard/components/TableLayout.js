@@ -21,6 +21,7 @@ export default function CustomTablePagination({
   columns,
   fetchDataFunction,
   refresher,
+  loading,
   initialPageSize = 10,
   rowsPerPageOptions = [5, 10, 25, 50],
   rowKey = '_id',
@@ -181,14 +182,20 @@ export default function CustomTablePagination({
                     ))}
                   </TableRow>
                 ))
+              ) : loading ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} align="center">
+                    <Typography variant="body2" color="textSecondary">
+                      جاري التحميل...
+                    </Typography>
+                  </TableCell>
+                </TableRow>
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    align="center"
-                    sx={{ py: 3, fontSize: 16 }}
-                  >
-                    لا توجد بيانات للعرض
+                  <TableCell colSpan={columns.length} align="center">
+                    <Typography variant="body2" color="textSecondary">
+                      لا توجد بيانات لعرضها
+                    </Typography>
                   </TableCell>
                 </TableRow>
               )}

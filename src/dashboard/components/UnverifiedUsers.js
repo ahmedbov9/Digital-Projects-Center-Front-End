@@ -5,7 +5,7 @@ import { API } from '../../Api/Api';
 import { Axios } from '../../Api/axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formatDistanceToNow } from 'date-fns';
-import { ar } from 'date-fns/locale';
+import { ar, fi } from 'date-fns/locale';
 import {
   closeAlert,
   confirmAlert,
@@ -17,6 +17,7 @@ import { useState } from 'react';
 
 export default function UnverifiedUsers() {
   const [refresher, setRefresher] = useState(0);
+  const [loading, setLoading] = useState(true);
   const fetchUsers = async (page, limit, search = '') => {
     let url = `${API.getAllUnverifiedUsers}?page=${page}&limit=${limit}`;
     if (search) {
@@ -34,6 +35,8 @@ export default function UnverifiedUsers() {
         data: [],
         total: 0,
       };
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,7 +54,7 @@ export default function UnverifiedUsers() {
     if (!cofirmDeleteTwo) {
       return;
     }
-    await loadingAlert('جاري الحذف...');
+    loadingAlert('جاري الحذف...');
     try {
       const response = await Axios.delete(`${API.deleteUnverifiedUser}`, {
         data: { id },
@@ -120,6 +123,7 @@ export default function UnverifiedUsers() {
           columns={columns}
           fetchDataFunction={fetchUsers}
           refresher={refresher}
+          loading={loading}
         />
       </DashboardLayout>
     </div>

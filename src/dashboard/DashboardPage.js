@@ -120,14 +120,14 @@ export default function DashboardPage() {
   ];
 
   const renderCard = ({ label, value, icon, color, isCurrency = false }) => (
-    <Grid item xs={12} sm={6} md={4} key={label}>
+    <Grid item xs={12} sm={6} md={4} key={label} sx={{ width: '100%' }}>
       <Card
         sx={{
           borderRadius: 3,
           boxShadow: 3,
           transition: '0.3s',
           minHeight: 100,
-          minWidth: 400,
+          minWidth: '100%',
           display: 'flex',
           '&:hover': {
             transform: 'translateY(-6px)',
@@ -193,7 +193,7 @@ export default function DashboardPage() {
           container
           spacing={3}
           justifyContent="center"
-          className={'col-lg-8 col-md-12 col-sm-5 mx-auto'}
+          className={'col-lg-6 col-md-12 col-sm-12 mx-auto'}
           mb={6}
         >
           {!loading ? mainStats.map(renderCard) : <LoadingSkeleton line={3} />}
@@ -210,7 +210,12 @@ export default function DashboardPage() {
           حالة الطلبات
         </Typography>
         {!loading ? (
-          <Grid container spacing={3} justifyContent="center">
+          <Grid
+            container
+            spacing={3}
+            justifyContent="center"
+            className={'col-lg-6 col-md-12 col-sm-12 mx-auto'}
+          >
             {orderStats.map((item) =>
               renderCard({ ...item, icon: <PendingActionsIcon /> })
             )}

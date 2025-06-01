@@ -17,6 +17,7 @@ import { useState } from 'react';
 
 export default function Orders() {
   const [refresher, setRefresher] = useState(0);
+  const [loading, setLoading] = useState(true);
   const columns = [
     {
       id: 'userId.email',
@@ -154,6 +155,8 @@ export default function Orders() {
         data: [],
         total: 0,
       };
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -165,6 +168,7 @@ export default function Orders() {
           columns={columns}
           fetchDataFunction={fetchOrders}
           refresher={refresher}
+          loading={loading}
         />
       </DashboardLayout>
     </div>

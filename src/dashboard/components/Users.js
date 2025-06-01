@@ -24,6 +24,7 @@ export default function Users() {
   const { currentUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [refresher, setRefresher] = useState(0);
+  const [loading, setLoading] = useState(true);
   const columns = [
     { id: 'email', label: 'البريد الإلكتروني', minWidth: 150 },
     { id: 'firstName', label: 'الاسم الاول', minWidth: 100 },
@@ -116,6 +117,13 @@ export default function Users() {
 
     if (!confirm) return;
 
+    const cofirmDeleteTwo = await confirmAlert({
+      message: `سيتم حذف المستخدم نهائيا من النظام. هل أنت متأكد؟`,
+      icon: 'error',
+    });
+    if (!cofirmDeleteTwo) {
+      return;
+    }
     loadingAlert('جاري حذف المستخدم...');
     try {
       const response = await Axios.delete(
@@ -131,6 +139,8 @@ export default function Users() {
       }
     } catch (error) {
       errorAlert(error.response.data.message || 'حدث خطأ أثناء حذف المستخدم');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -162,6 +172,7 @@ export default function Users() {
           columns={columns}
           fetchDataFunction={fetchUsers}
           refresher={refresher}
+          loading={loading}
         />
       </DashboardLayout>
     </div>
