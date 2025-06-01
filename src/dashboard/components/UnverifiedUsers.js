@@ -124,6 +124,7 @@ export default function UnverifiedUsers() {
           fetchDataFunction={fetchUsers}
           refresher={refresher}
           loading={loading}
+          setLoading={setLoading}
         />
       </DashboardLayout>
     </div>

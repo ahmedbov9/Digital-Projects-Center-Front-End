@@ -173,6 +173,7 @@ export default function Users() {
           fetchDataFunction={fetchUsers}
           refresher={refresher}
           loading={loading}
+          setLoading={setLoading}
         />
       </DashboardLayout>
     </div>

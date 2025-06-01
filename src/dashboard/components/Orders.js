@@ -169,6 +169,7 @@ export default function Orders() {
           fetchDataFunction={fetchOrders}
           refresher={refresher}
           loading={loading}
+          setLoading={setLoading}
         />
       </DashboardLayout>
     </div>

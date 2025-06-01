@@ -22,6 +22,7 @@ export default function CustomTablePagination({
   fetchDataFunction,
   refresher,
   loading,
+  setLoading,
   initialPageSize = 10,
   rowsPerPageOptions = [5, 10, 25, 50],
   rowKey = '_id',
@@ -37,6 +38,7 @@ export default function CustomTablePagination({
     const handler = setTimeout(() => {
       setDebouncedSearch(search.trim());
       setPage(1);
+      setLoading(true);
     }, 700);
 
     return () => clearTimeout(handler);
@@ -55,6 +57,8 @@ export default function CustomTablePagination({
       console.error('Error fetching data:', error);
       setRows([]);
       setTotalCount(0);
+    } finally {
+      setLoading(false);
     }
   }, [page, rowsPerPage, debouncedSearch, fetchDataFunction]);
 
@@ -64,11 +68,15 @@ export default function CustomTablePagination({
 
   const totalPages = Math.ceil(totalCount / rowsPerPage) || 1;
 
-  const handleChangePage = (_, value) => setPage(value);
+  const handleChangePage = (_, value) => {
+    setPage(value);
+    setLoading(true);
+  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(Number(event.target.value));
     setPage(1);
+    setLoading(true);
   };
 
   const getNestedValue = (obj, path) =>
